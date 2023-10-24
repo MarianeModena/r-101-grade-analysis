@@ -10,9 +10,18 @@ library(dplyr)
 library(ggplot2)
 library(vroom)
 ```
-
 ## Question 1
+
 ```{r}
 grades <- vroom("grades.csv")
+```
+## Question 2
+
+```{r}
+exam_grades <- 
+  grades |>
+  summarise('max'=max(Exam, na.rm=TRUE), 'min'=min(Exam, na.rm=TRUE), 'median'=median(Exam, na.rm=TRUE), 'mean'=mean(Exam, na.rm=TRUE))
+
+knitr::kable(exam_grades)
 ```
 
