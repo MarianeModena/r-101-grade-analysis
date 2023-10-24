@@ -33,3 +33,11 @@ NA_exam <-
 ```
 
 `r nrow(NA_exam)` students didn't take the exam.
+
+## Question 4
+
+```{r}
+ggplot(grades, aes(x=Exam))+
+  geom_bar()
+```
+
