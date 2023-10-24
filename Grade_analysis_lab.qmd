@@ -24,4 +24,12 @@ exam_grades <-
 
 knitr::kable(exam_grades)
 ```
+## Question 3
 
+```{r}
+NA_exam <- 
+  grades |>
+  filter(is.na(Exam))
+```
+
+`r nrow(NA_exam)` students didn't take the exam.
