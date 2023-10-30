@@ -53,5 +53,15 @@ ggplot(No_NA_exam, aes(x=Exam))+
 ```
 Note: we could also use a geom density, but it only captures the global shape of the distribution and therefore fails to highlight the lower counts of grades that end with '.5'.
 
+## Question 5 
+
+```{r}
+students_per_group <-
+  grades |>
+  group_by(Group)|>
+  summarise('Number of students'=n())
+  
+knitr::kable(students_per_group)
+```
 
 
