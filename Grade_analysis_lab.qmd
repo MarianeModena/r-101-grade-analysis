@@ -64,4 +64,16 @@ students_per_group <-
 knitr::kable(students_per_group)
 ```
 
+## Question 6 
+
+we create a column with only the group number to have a more readable x axis when plotting.
+```{r}
+ggplot(
+  grades |>
+  mutate('Group number' = gsub("grp_", "", grades$Group)),
+  aes(x=`Group number`))+
+  geom_bar()+
+  labs(title ='Number of students per group')
+
+```
 
