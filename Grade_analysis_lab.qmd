@@ -22,7 +22,7 @@ exam_grades <-
   grades |>
   summarise('max'=max(Exam, na.rm=TRUE), 'min'=min(Exam, na.rm=TRUE), 'median'=median(Exam, na.rm=TRUE), 'mean'=mean(Exam, na.rm=TRUE))
 
-knitr::kable(exam_grades)
+knitr::kable(exam_grades, caption='Descriptive statistics on the grades received at the exam')
 ```
 ## Question 3
 
@@ -36,8 +36,22 @@ NA_exam <-
 
 ## Question 4
 
+We first compute a dataset with no 'NA' values in the 'Exam' column from the grades dataset. Using this new dataset when plotting the distribution of the Exam grades avoids warnings from ggplot2.
+
 ```{r}
-ggplot(grades, aes(x=Exam))+
-  geom_bar()
+No_NA_exam <-
+  grades |>
+  filter(!is.na(Exam))
 ```
+
+
+```{r}
+ggplot(No_NA_exam, aes(x=Exam))+
+  geom_bar()+
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 20))+
+  labs(title='Distribution of the grades received at the exam', x='Exam grades' )
+```
+Note: we could also use a geom density, but it only captures the global shape of the distribution and therefore fails to highlight the lower counts of grades that end with '.5'.
+
+
 
