@@ -77,3 +77,30 @@ ggplot(
 
 ```
 
+## Question 7
+
+### First solution (boxplots)
+
+```{r}
+ggplot(
+  No_NA_exam |>
+  mutate('Group number' = gsub("grp_", "", No_NA_exam$Group)),
+  aes(x=`Group number`, y=Exam))+
+  geom_boxplot()+
+  labs(title='Distribution of the grades received at the Exam conditionned by the group')
+  
+  
+```
+
+### Second solution (violins)
+
+```{r}
+ggplot(
+  No_NA_exam |>
+  mutate('Group number' = gsub("grp_", "", No_NA_exam$Group)),
+  aes(x=`Group number`, y=Exam))+
+  geom_violin(draw_quantiles = c(0.25, 0.75))+
+  stat_summary(fun.y=median, geom='point', color='red')+
+  labs(title='Distribution of the grades received at the Exam conditionned by the group')
+```
+
