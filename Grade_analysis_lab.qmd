@@ -140,3 +140,14 @@ long_grades <-
 long_grades
 ```
 
+## Question 11
+
+```{r}
+missing_grades_per_student <-
+  long_grades |>
+  group_by(Id) |>
+  summarise('Missing grades'=sum(is.na(value)))
+
+missing_grades_per_student
+```
+
