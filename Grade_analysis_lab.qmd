@@ -126,3 +126,17 @@ geom_col()+
 labs(title='Number of students who did not take the exam per group')
        
 ```
+## Question 10
+
+```{r}
+library(tidyr)
+```
+
+```{r}
+long_grades <-
+  grades |>
+  pivot_longer(cols=-c('Id','Group'), names_to='name')
+
+long_grades
+```
+
