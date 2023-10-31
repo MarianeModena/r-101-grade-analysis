@@ -151,3 +151,11 @@ missing_grades_per_student <-
 missing_grades_per_student
 ```
 
+## Question 12
+
+```{r}
+ggplot(missing_grades_per_student, aes(x=`Missing grades`))+
+  geom_bar()+
+  labs(title='Distribution of the number of missing grade per student')
+```
+
