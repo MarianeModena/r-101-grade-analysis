@@ -109,9 +109,20 @@ ggplot(
 ```{r}
 NA_students_per_group <-
   grades |>
-  mutate('Group number' = gsub("grp_", "", grades$Group))|>
-  group_by(`Group number`)|>
+  group_by(`Group`)|>
   summarise('Number of NA (Exam)'=sum(is.na(Exam)))
+
+knitr::kable(NA_students_per_group)
 
 ```
 
+## Question 9
+
+```{r}
+ggplot(NA_students_per_group |>
+       mutate('Group number' = gsub("grp_", "", NA_students_per_group$Group)),
+       aes(x=`Group number`, y=`Number of NA (Exam)`))+
+geom_col()+
+labs(title='Number of students who did not take the exam per group')
+       
+```
