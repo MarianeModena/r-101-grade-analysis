@@ -104,3 +104,14 @@ ggplot(
   labs(title='Distribution of the grades received at the Exam conditionned by the group')
 ```
 
+## Question 8 
+
+```{r}
+NA_students_per_group <-
+  grades |>
+  mutate('Group number' = gsub("grp_", "", grades$Group))|>
+  group_by(`Group number`)|>
+  summarise('Number of NA (Exam)'=sum(is.na(Exam)))
+
+```
+
