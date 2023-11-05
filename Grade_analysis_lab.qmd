@@ -109,7 +109,7 @@ ggplot(
 ```{r}
 NA_students_per_group <-
   grades |>
-  group_by(`Group`)|>
+  group_by(Group)|>
   summarise('Number of NA (Exam)'=sum(is.na(Exam)))
 
 knitr::kable(NA_students_per_group)
@@ -158,4 +158,16 @@ ggplot(missing_grades_per_student, aes(x=`Missing grades`))+
   geom_bar()+
   labs(title='Distribution of the number of missing grade per student')
 ```
+## Question 13
 
+```{r}
+library(stringr)
+```
+
+```{r}
+NA_students_per_group_2 <-
+  long_grades |>
+  filter(str_starts(name, "Exam"))|>
+  group_by(Group)|>
+  summarise('Number of NA (Exam)'=sum(is.na(value)))
+```
