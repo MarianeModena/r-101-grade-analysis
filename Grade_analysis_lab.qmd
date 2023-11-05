@@ -219,4 +219,18 @@ missed_MCQ <-
 missed_MCQ   
 ```
 
+## Question 17
+
+```{r}
+missed_MCQ_group <-
+  long_grades |>
+  filter(str_starts(name, "MCQ_"))|>
+  group_by(Group, Id)|>
+  mutate('Missed at least 1 MCQ'=if_else(sum(is.na(value))==0,0,1)) |>
+  group_by(Group) |>
+  summarise('P_missed'=sum(`Missed at least 1 MCQ`)/n()*100)
+
+  
+missed_MCQ_group 
+```
 
