@@ -200,6 +200,23 @@ We use an inner join that will not take into account the students that are in th
 
 ```{r}
 ggplot(join, aes(x=`missing grades (Online)`, y=Exam, group=`missing grades (Online)`))+
-  geom_boxplot()
+  geom_boxplot()+
+  labs(title='Distribution of the grades at the Exam conditional on the number of missing grades at online tests')
 ```
+
+## Question 16
+
+```{r}
+missed_MCQ <-
+  long_grades |>
+  filter(str_starts(name, "MCQ_"))|>
+  group_by(Id) |>
+  summarise(
+    'Missed'=if_else(sum(is.na(value))==0, FALSE, TRUE)
+    )
+  
+  
+missed_MCQ   
+```
+
 
