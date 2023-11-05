@@ -110,7 +110,7 @@ ggplot(
 NA_students_per_group <-
   grades |>
   group_by(Group)|>
-  summarise('Number of NA (Exam)'=sum(is.na(Exam)))
+  summarise('Missing grades (Exam)'=sum(is.na(Exam)))
 
 knitr::kable(NA_students_per_group)
 
@@ -121,7 +121,7 @@ knitr::kable(NA_students_per_group)
 ```{r}
 ggplot(NA_students_per_group |>
        mutate('Group number' = gsub("grp_", "", NA_students_per_group$Group)),
-       aes(x=`Group number`, y=`Number of NA (Exam)`))+
+       aes(x=`Group number`, y=`Missing grades (Exam)`))+
 geom_col()+
 labs(title='Number of students who did not take the exam per group')
        
@@ -169,5 +169,18 @@ NA_students_per_group_2 <-
   long_grades |>
   filter(str_starts(name, "Exam"))|>
   group_by(Group)|>
-  summarise('Number of NA (Exam)'=sum(is.na(value)))
+  summarise('Missing grades (Exam)'=sum(is.na(value)))
 ```
+
+## Question 14
+
+```{r}
+missing_grades_per_student_online <-
+  long_grades |>
+  filter(str_starts(name, "Online"))|>
+  group_by(Id)|>
+  summarise('missing grades (Online)'=sum(is.na(value)))
+
+missing_grades_per_student_online
+```
+
