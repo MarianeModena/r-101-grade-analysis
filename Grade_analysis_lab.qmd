@@ -234,3 +234,23 @@ missed_MCQ_group <-
 missed_MCQ_group 
 ```
 
+## Question 18
+
+```{r}
+average_Exam_per_group <-
+  No_NA_exam |>
+  group_by(Group)|>
+  summarise('Average grade (Exam)'=mean(Exam))
+```
+
+```{r}
+join2 <- inner_join(missed_MCQ_group, average_Exam_per_group, join_by(Group) )
+```
+
+```{r}
+ggplot(join2, aes(x=`P_missed`, y=`Average grade (Exam)`))+
+  geom_point()+
+  geom_line()+
+  labs(title='Average grade at the exam (per group) as a function of the percentage of missed MCQ grade')
+```
+
