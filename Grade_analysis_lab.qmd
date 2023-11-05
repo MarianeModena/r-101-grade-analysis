@@ -184,3 +184,22 @@ missing_grades_per_student_online <-
 missing_grades_per_student_online
 ```
 
+## Question 15
+
+We are going to join two tables :
+- the table of students who didn't miss the exam (No NA exam), since we want the distributions of grades at the Exam without warning from Ggplot2
+- The table that counts the number of missing grades at online tests for each student. This one is longer than the previous one, since the student who missed the Exam appear in that table but not in the previous one.
+
+
+```{r}
+join <- inner_join(No_NA_exam, missing_grades_per_student_online, join_by(Id))
+  
+```
+
+We use an inner join that will not take into account the students that are in the missing_grades_per_student table but not in the No_NA_Exam table (a left join would also work)
+
+```{r}
+ggplot(join, aes(x=`missing grades (Online)`, y=Exam, group=`missing grades (Online)`))+
+  geom_boxplot()
+```
+
