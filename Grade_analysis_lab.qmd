@@ -5,6 +5,8 @@ format: html
 ---
 
 ```{r}
+
+#| message = FALSE
 here::i_am("r-101-grade-analysis.Rproj")
 library(dplyr)
 library(ggplot2)
@@ -13,16 +15,17 @@ library(vroom)
 ## Question 1
 
 ```{r}
+#| message = FALSE
 grades <- vroom("grades.csv")
 ```
 ## Question 2
 
 ```{r}
-exam_grades <- 
+exam_stats <- 
   grades |>
   summarise('max'=max(Exam, na.rm=TRUE), 'min'=min(Exam, na.rm=TRUE), 'median'=median(Exam, na.rm=TRUE), 'mean'=mean(Exam, na.rm=TRUE))
 
-knitr::kable(exam_grades, caption='Descriptive statistics on the grades received at the exam')
+knitr::kable(exam_stats, caption='Descriptive statistics on the grades received at the exam')
 ```
 ## Question 3
 
@@ -36,7 +39,7 @@ NA_exam <-
 
 ## Question 4
 
-We first compute a dataset with no 'NA' values in the 'Exam' column from the grades dataset. Using this new dataset when plotting the distribution of the Exam grades avoids warnings from ggplot2.
+We first compute a dataset with no 'NA' values in the Exam column of the grades dataset. Using this new dataset when plotting the distribution of the exam grades avoids warnings from ggplot2.
 
 ```{r}
 No_NA_exam <-
@@ -49,7 +52,7 @@ No_NA_exam <-
 ggplot(No_NA_exam, aes(x=Exam))+
   geom_bar()+
   scale_x_continuous(breaks = scales::pretty_breaks(n = 20))+
-  labs(title='Distribution of the grades received at the exam', x='Exam grades' )
+  labs(title='Distribution of the grades received at the Exam', x='Exam grades' )
 ```
 Note: we could also use a geom density, but it only captures the global shape of the distribution and therefore fails to highlight the lower counts of grades that end with '.5'.
 
@@ -68,13 +71,11 @@ knitr::kable(students_per_group)
 
 we create a column with only the group number to have a more readable x axis when plotting.
 ```{r}
-ggplot(
   grades |>
-  mutate('Group number' = gsub("grp_", "", grades$Group)),
-  aes(x=`Group number`))+
+  mutate('Group number' = gsub("grp_", "", grades$Group)) |>
+  ggplot(aes(x=`Group number`))+
   geom_bar()+
   labs(title ='Number of students per group')
-
 ```
 
 ## Question 7
@@ -82,27 +83,22 @@ ggplot(
 ### First solution (boxplots)
 
 ```{r}
-ggplot(
   No_NA_exam |>
-  mutate('Group number' = gsub("grp_", "", No_NA_exam$Group)),
-  aes(x=`Group number`, y=Exam))+
+  mutate('Group number' = gsub("grp_", "", No_NA_exam$Group)) |>
+  ggplot(aes(x=`Group number`, y=Exam))+
   geom_boxplot()+
   labs(title='Distribution of the grades received at the Exam conditionned by the group')
-  
-  
 ```
 
-### Second solution (violins)
+### Second solution (facets)
 
 ```{r}
-ggplot(
-  No_NA_exam |>
-  mutate('Group number' = gsub("grp_", "", No_NA_exam$Group)),
-  aes(x=`Group number`, y=Exam))+
-  geom_violin(draw_quantiles = c(0.25, 0.75))+
-  stat_summary(fun.y=median, geom='point', color='red')+
-  labs(title='Distribution of the grades received at the Exam conditionned by the group')
+ No_NA_exam |>
+  ggplot(aes(x=Exam))+
+  geom_density()+
+  facet_wrap(~Group, nrow=4)
 ```
+Bar charts would be better here, but they are difficult to read with the 24 groups... The boxplot solution is the best.
 
 ## Question 8 
 
@@ -119,11 +115,11 @@ knitr::kable(NA_students_per_group)
 ## Question 9
 
 ```{r}
-ggplot(NA_students_per_group |>
-       mutate('Group number' = gsub("grp_", "", NA_students_per_group$Group)),
-       aes(x=`Group number`, y=`Missing grades (Exam)`))+
+NA_students_per_group |>
+mutate('Group number' = gsub("grp_", "", NA_students_per_group$Group))|>
+ggplot(aes(x=`Group number`, y=`Missing grades (Exam)`))+
 geom_col()+
-labs(title='Number of students who did not take the exam per group')
+labs(title='Number of students who did not take the Exam per group')
        
 ```
 ## Question 10
@@ -136,8 +132,6 @@ library(tidyr)
 long_grades <-
   grades |>
   pivot_longer(cols=-c('Id','Group'), names_to='name')
-
-long_grades
 ```
 
 ## Question 11
@@ -156,7 +150,7 @@ missing_grades_per_student
 ```{r}
 ggplot(missing_grades_per_student, aes(x=`Missing grades`))+
   geom_bar()+
-  labs(title='Distribution of the number of missing grade per student')
+  labs(title='Distribution of the number of missing grades')
 ```
 ## Question 13
 
@@ -187,8 +181,10 @@ missing_grades_per_student_online
 ## Question 15
 
 We are going to join two tables :
-- the table of students who didn't miss the exam (No NA exam), since we want the distributions of grades at the Exam without warning from Ggplot2
-- The table that counts the number of missing grades at online tests for each student. This one is longer than the previous one, since the student who missed the Exam appear in that table but not in the previous one.
+
+-the table of students who didn't miss the exam (No NA exam), since we want the distributions of grades at the Exam without warning from Ggplot2
+
+-the table that counts the number of missing grades at online tests for each student. This one is longer than the previous one, since the student who missed the Exam appear in that table but not in the previous one.
 
 
 ```{r}
@@ -251,6 +247,6 @@ join2 <- inner_join(missed_MCQ_group, average_Exam_per_group, join_by(Group) )
 ggplot(join2, aes(x=`P_missed`, y=`Average grade (Exam)`))+
   geom_point()+
   geom_line()+
-  labs(title='Average grade at the exam (per group) as a function of the percentage of missed MCQ grade')
+  labs(title='Average grade at the Exam as a function of the percentage of missed MCQ grade (per groups)')
 ```
 
