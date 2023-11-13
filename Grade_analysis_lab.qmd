@@ -4,20 +4,21 @@ author: "Mariane Modena"
 format: html
 ---
 
-```{r}
+```{r message = FALSE}
 
-#| message = FALSE
 here::i_am("r-101-grade-analysis.Rproj")
 library(dplyr)
 library(ggplot2)
 library(vroom)
 ```
+
 ## Question 1
 
-```{r}
-#| message = FALSE
+```{r message = FALSE}
+
 grades <- vroom("grades.csv")
 ```
+
 ## Question 2
 
 ```{r}
@@ -27,6 +28,7 @@ exam_stats <-
 
 knitr::kable(exam_stats, caption='Descriptive statistics on the grades received at the exam')
 ```
+
 ## Question 3
 
 ```{r}
@@ -47,16 +49,16 @@ No_NA_exam <-
   filter(!is.na(Exam))
 ```
 
-
 ```{r}
 ggplot(No_NA_exam, aes(x=Exam))+
   geom_bar()+
   scale_x_continuous(breaks = scales::pretty_breaks(n = 20))+
   labs(title='Distribution of the grades received at the Exam', x='Exam grades' )
 ```
+
 Note: we could also use a geom density, but it only captures the global shape of the distribution and therefore fails to highlight the lower counts of grades that end with '.5'.
 
-## Question 5 
+## Question 5
 
 ```{r}
 students_per_group <-
@@ -67,9 +69,10 @@ students_per_group <-
 knitr::kable(students_per_group)
 ```
 
-## Question 6 
+## Question 6
 
 we create a column with only the group number to have a more readable x axis when plotting.
+
 ```{r}
   grades |>
   mutate('Group number' = gsub("grp_", "", grades$Group)) |>
@@ -98,9 +101,10 @@ we create a column with only the group number to have a more readable x axis whe
   geom_density()+
   facet_wrap(~Group, nrow=4)
 ```
+
 Bar charts would be better here, but they are difficult to read with the 24 groups... The boxplot solution is the best.
 
-## Question 8 
+## Question 8
 
 ```{r}
 NA_students_per_group <-
@@ -122,6 +126,7 @@ geom_col()+
 labs(title='Number of students who did not take the Exam per group')
        
 ```
+
 ## Question 10
 
 ```{r}
@@ -152,6 +157,7 @@ ggplot(missing_grades_per_student, aes(x=`Missing grades`))+
   geom_bar()+
   labs(title='Distribution of the number of missing grades')
 ```
+
 ## Question 13
 
 ```{r}
@@ -184,15 +190,14 @@ We are going to join two tables :
 
 -the table of students who didn't miss the exam (No NA exam), since we want the distributions of grades at the Exam without warning from Ggplot2
 
--the table that counts the number of missing grades at online tests for each student. This one is longer than the previous one, since the student who missed the Exam appear in that table but not in the previous one.
-
+-the table that counts the number of missing grades at online tests for each student. This one is longer than the previous one, since the students who missed the Exam appear in that table but not in the previous one.
 
 ```{r}
 join <- inner_join(No_NA_exam, missing_grades_per_student_online, join_by(Id))
   
 ```
 
-We use an inner join that will not take into account the students that are in the missing_grades_per_student table but not in the No_NA_Exam table (a left join would also work)
+We use an inner join that will not take into account the students that are in the missing_grades_per_student table but not in the No_NA_Exam table (a left join would also work).
 
 ```{r}
 ggplot(join, aes(x=`missing grades (Online)`, y=Exam, group=`missing grades (Online)`))+
@@ -249,4 +254,3 @@ ggplot(join2, aes(x=`P_missed`, y=`Average grade (Exam)`))+
   geom_line()+
   labs(title='Average grade at the Exam as a function of the percentage of missed MCQ grade (per groups)')
 ```
-
